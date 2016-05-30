@@ -24,5 +24,10 @@ namespace Wpf2chdownloader
         {
             InitializeComponent();
         }
+
+        private void loadButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }
