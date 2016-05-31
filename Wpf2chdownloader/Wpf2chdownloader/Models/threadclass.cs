@@ -104,4 +104,29 @@ namespace Wpf2chdownloader.Models
         public int speed { get; set; }
     }
 
+    public class FileTypeCount
+    {
+        public string type { get; set; }
+        public int count { get; set; }
+    }
+
+    public class FileForDownload
+    {
+        public string md5 { get; set; }
+        public string name { get; set; }
+        public string path { get; set; }
+        public int size { get; set; }
+        public int type { get; set; }
+    }
+
+    public class FileList
+    {
+        public List<FileTypeCount> listFileTypeCount { get; set; }
+        public List<FileForDownload> listFileForDownload { get; set; }
+        public FileList()
+        {
+            listFileTypeCount = new List<FileTypeCount>();
+            listFileForDownload = new List<FileForDownload>();
+        }
+    }
 }
