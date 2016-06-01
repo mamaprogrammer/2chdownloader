@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,6 +42,18 @@ namespace Wpf2chdownloader
             DownloadFiles();
         }
 
+        public string ComputeMD5Checksum(string path)
+        {
+            using (FileStream fs = System.IO.File.OpenRead(path))
+            {
+                MD5 md5 = new MD5CryptoServiceProvider();
+                byte[] fileData = new byte[fs.Length];
+                fs.Read(fileData, 0, (int)fs.Length);
+                byte[] checkSum = md5.ComputeHash(fileData);
+                string result = BitConverter.ToString(checkSum).Replace("-", String.Empty);
+                return result;
+            }
+        }
 
         private void DownloadFile(Models.File item)
         {
@@ -50,6 +63,8 @@ namespace Wpf2chdownloader
             localPath = localPath + "\\DownloadDir";
             Directory.CreateDirectory(localPath);
             webClient.DownloadFile(new Uri(link), localPath +"\\"+ item.name );
+            //string s = ComputeMD5Checksum(localPath + "\\" + item.name);
+            //if (s != item.md5) 
         }
 
 
