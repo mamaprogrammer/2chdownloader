@@ -55,16 +55,20 @@ namespace Wpf2chdownloader
             }
         }
 
+        public string downloadDir = "\\DownloadDir";
+
         private void DownloadFile(Models.File item)
         {
             string link = item.path;
             WebClient webClient = new WebClient();
+            webClient.Headers[HttpRequestHeader.CacheControl] = "no-cache";
             string localPath = Directory.GetCurrentDirectory();
-            localPath = localPath + "\\DownloadDir";
+            localPath = localPath + "\\DownloadDir" + downloadDir;
             Directory.CreateDirectory(localPath);
             webClient.DownloadFile(new Uri(link), localPath +"\\"+ item.name );
-            //string s = ComputeMD5Checksum(localPath + "\\" + item.name);
-            //if (s != item.md5) 
+            string s = ComputeMD5Checksum(localPath + "\\" + item.name);
+            string test = "";
+            if (s != item.md5) test += s + " - " + item.md5;   
         }
 
 
@@ -82,7 +86,7 @@ namespace Wpf2chdownloader
 
         }
 
-        public Rootobject loadThread(Uri url)
+        public void loadThread(Uri url)
         {
             var thread = new Rootobject();
             try
@@ -94,7 +98,7 @@ namespace Wpf2chdownloader
             catch
             {
             }
-            return thread; 
+            threadForDownload = thread; 
         }
 
         public List<Models.File> parseThread(Rootobject thread)
@@ -132,16 +136,17 @@ namespace Wpf2chdownloader
         public List<Models.File> fileList;
         public List<Models.File> fileLIstforDownload;
         public Dictionary<string, int> fileTypeCount;
+        public Rootobject threadForDownload;
         
         private void loadButton_Click(object sender, RoutedEventArgs e)
         {
             Uri url;
-            var thread = new Rootobject();
+            //var thread = new Rootobject();
             try
             {
                 url = new Uri(inputUrlBox.Text);
-                thread = loadThread(url);
-                fileList  = parseThread(thread);
+                loadThread(url);
+                fileList  = parseThread(threadForDownload);
                 typeFileComboBox.Items.Clear();
                 typeFileComboBox.Items.Add("Все");
                 typeFileComboBox.SelectedItem = "Все";
@@ -170,6 +175,7 @@ namespace Wpf2chdownloader
         {
             fileLIstforDownload = new List<Models.File>();
             int count = 0;
+            downloadDir = "\\" + threadForDownload.current_thread;
             if ((string)typeFileComboBox.SelectedValue == "Все")
             {
                 foreach (var item in fileTypeCount)
