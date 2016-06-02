@@ -88,6 +88,8 @@ namespace Wpf2chdownloader
                 Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, ++value });
             }
             WriteMD5List();
+            value = 0;
+            Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, value });
         }
 
         public void loadThread(Uri url)
@@ -107,7 +109,6 @@ namespace Wpf2chdownloader
 
         public List<Models.File> parseThread(Rootobject thread)
         {
-            //var test = thread.threads[0].posts;
             var fileList = new List<Models.File>();
             foreach (var item in thread.threads[0].posts)
             {
@@ -145,7 +146,6 @@ namespace Wpf2chdownloader
         private void loadButton_Click(object sender, RoutedEventArgs e)
         {
             Uri url;
-            //var thread = new Rootobject();
             try
             {
                 url = new Uri(inputUrlBox.Text);
@@ -196,7 +196,6 @@ namespace Wpf2chdownloader
                     if (getFileType(item.name) == (string)typeFileComboBox.SelectedValue) fileLIstforDownload.Add(item);
                 }
             }
-            // || ((string)typeFileComboBox.SelectedValue) == typeFileComboBox.Text) 
             progressBar.Maximum = count;
             worker.RunWorkerAsync();
         }
@@ -213,7 +212,6 @@ namespace Wpf2chdownloader
 
         public void WriteMD5List()
         {
-            //listMD5Hash = new List<string>();
             string path = "listnd5.xml";
             var writer = new XmlSerializer(typeof(List<string>));
             var wfile = new StreamWriter(path);
