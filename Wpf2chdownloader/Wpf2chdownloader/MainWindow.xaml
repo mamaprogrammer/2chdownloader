@@ -14,6 +14,7 @@
         <Button x:Name="downloadButton" Content="Download" HorizontalAlignment="Left" Margin="487,38,0,0" VerticalAlignment="Top" Width="90" Height="22" Click="downloadButton_Click" IsEnabled="False"/>
         <TextBlock x:Name="infoBlock" HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="347"/>
         <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="22" Margin="362,65,0,0" VerticalAlignment="Top" Width="215"/>
+        <Button x:Name="md5Button" Content="CreateMD5Table" HorizontalAlignment="Left" Margin="487,92,0,0" VerticalAlignment="Top" Width="90" Height="22" FontSize="10" Click="md5Button_Click"/>
 
     </Grid>
 </Window>

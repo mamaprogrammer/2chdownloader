@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 using Wpf2chdownloader.Models;
 
 namespace Wpf2chdownloader
@@ -33,7 +34,8 @@ namespace Wpf2chdownloader
         {
             worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-
+            listMD5Hash = new List<string>();
+            ReadMD5List();
             InitializeComponent();
         }
 
@@ -50,7 +52,7 @@ namespace Wpf2chdownloader
                 byte[] fileData = new byte[fs.Length];
                 fs.Read(fileData, 0, (int)fs.Length);
                 byte[] checkSum = md5.ComputeHash(fileData);
-                string result = BitConverter.ToString(checkSum).Replace("-", String.Empty);
+                string result = BitConverter.ToString(checkSum).Replace("-", String.Empty).ToLower();
                 return result;
             }
         }
@@ -71,19 +73,21 @@ namespace Wpf2chdownloader
             if (s != item.md5) test += s + " - " + item.md5;   
         }
 
-
-
         private void DownloadFiles()
         {
             UpdateProgressBarDelegate updProgress = new UpdateProgressBarDelegate(progressBar.SetValue);
             double value = 0;
             foreach (var item in fileLIstforDownload)
             {
-
-                DownloadFile(item);
+                if (!listMD5Hash.Contains(item.md5))
+                {
+                    DownloadFile(item);
+                    listMD5Hash.Add(item.md5);
+                }
+                   
                 Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, ++value });
             }
-
+            WriteMD5List();
         }
 
         public void loadThread(Uri url)
@@ -132,12 +136,12 @@ namespace Wpf2chdownloader
             return s;
         }
 
-
         public List<Models.File> fileList;
         public List<Models.File> fileLIstforDownload;
         public Dictionary<string, int> fileTypeCount;
         public Rootobject threadForDownload;
-        
+        public List<string> listMD5Hash;
+
         private void loadButton_Click(object sender, RoutedEventArgs e)
         {
             Uri url;
@@ -195,6 +199,37 @@ namespace Wpf2chdownloader
             // || ((string)typeFileComboBox.SelectedValue) == typeFileComboBox.Text) 
             progressBar.Maximum = count;
             worker.RunWorkerAsync();
+        }
+
+        public void ReadMD5List()
+        {
+            listMD5Hash = new List<string>();
+            string path = "listnd5.xml";
+            XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
+            StreamReader reader = new StreamReader(path);
+            listMD5Hash = (List<string>)serializer.Deserialize(reader);
+            reader.Close();
+        }
+
+        public void WriteMD5List()
+        {
+            //listMD5Hash = new List<string>();
+            string path = "listnd5.xml";
+            var writer = new XmlSerializer(typeof(List<string>));
+            var wfile = new StreamWriter(path);
+            writer.Serialize(wfile, listMD5Hash);
+            wfile.Close();
+        }
+
+
+        private void md5Button_Click(object sender, RoutedEventArgs e)
+        {
+            var allFiles = Directory.GetFiles(Directory.GetCurrentDirectory()+ "\\DownloadDir", "*.*", SearchOption.AllDirectories);
+            foreach (var item in allFiles)
+            {
+                listMD5Hash.Add(ComputeMD5Checksum(item));
+            }
+            WriteMD5List();
         }
     }
 }
