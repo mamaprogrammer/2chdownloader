@@ -203,7 +203,7 @@ namespace Wpf2chdownloader
         public void ReadMD5List()
         {
             listMD5Hash = new List<string>();
-            string path = "listnd5.xml";
+            string path = "listmd5.xml";
             XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
             StreamReader reader = new StreamReader(path);
             listMD5Hash = (List<string>)serializer.Deserialize(reader);
@@ -212,7 +212,7 @@ namespace Wpf2chdownloader
 
         public void WriteMD5List()
         {
-            string path = "listnd5.xml";
+            string path = "listmd5.xml";
             var writer = new XmlSerializer(typeof(List<string>));
             var wfile = new StreamWriter(path);
             writer.Serialize(wfile, listMD5Hash);
