@@ -281,8 +281,9 @@ namespace Wpf2chdownloader
         private void findeButton_Click(object sender, RoutedEventArgs e)
         {
             Uri url;
-            var boardUrl = new List<string>(); 
-            url = new Uri("https://2ch.hk/b/catalog.json");
+            var boardUrl = new List<string>();
+            var boardLetter = boardTextBox.Text; 
+            url = new Uri("https://2ch.hk/"+ boardLetter + "/catalog.json");
             loadBoard(url);
             string[] test = regularTextBox.Text.Split(',');
 
