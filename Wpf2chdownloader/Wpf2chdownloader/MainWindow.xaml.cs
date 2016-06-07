@@ -27,6 +27,14 @@ namespace Wpf2chdownloader
     /// </summary>
 
     delegate void UpdateProgressBarDelegate(DependencyProperty dp, object value);
+    static class Data
+    {
+        public static string Url { get; set; }
+        public static string CoocieValue { get; set; }
+
+    }
+
+
     public partial class MainWindow : Window
     {
         BackgroundWorker worker;
@@ -59,10 +67,12 @@ namespace Wpf2chdownloader
 
         public string downloadDir = "\\DownloadDir";
 
-        private void DownloadFile(Models.File item)
+        private void DownloadFile(Models.threadclass.File item)
         {
             string link = item.path;
             WebClient webClient = new WebClient();
+            webClient.Headers.Add(HttpRequestHeader.Cookie,
+              "usercode_auth=159d87d4d034c29ecb76c5117ac86d19;");
             webClient.Headers[HttpRequestHeader.CacheControl] = "no-cache";
             string localPath = Directory.GetCurrentDirectory();
             localPath = localPath + "\\DownloadDir" + downloadDir;
@@ -94,12 +104,17 @@ namespace Wpf2chdownloader
 
         public void loadThread(Uri url)
         {
-            var thread = new Rootobject();
+            var thread = new Models.threadclass.Rootobject();
             try
             {
                 string s = url.AbsoluteUri;
-                var json = new WebClient { Encoding = Encoding.UTF8 }.DownloadString(url.AbsoluteUri.Substring(0, s.LastIndexOf(".")) + ".json");
-                thread = JsonConvert.DeserializeObject<Rootobject>(json);
+                var wb = new WebClient { Encoding = Encoding.UTF8 };
+                wb.Headers.Add(HttpRequestHeader.Cookie,"usercode_auth=159d87d4d034c29ecb76c5117ac86d19;");
+
+                var json = wb.DownloadString(url.AbsoluteUri.Substring(0, s.LastIndexOf(".")) + ".json");
+
+    
+                thread = JsonConvert.DeserializeObject<Models.threadclass.Rootobject>(json);
             }
             catch
             {
@@ -107,9 +122,9 @@ namespace Wpf2chdownloader
             threadForDownload = thread; 
         }
 
-        public List<Models.File> parseThread(Rootobject thread)
+        public List<Models.threadclass.File> parseThread(Models.threadclass.Rootobject thread)
         {
-            var fileList = new List<Models.File>();
+            var fileList = new List<Models.threadclass.File>();
             foreach (var item in thread.threads[0].posts)
             {
                 if (item.files.Count() > 0)
@@ -137,10 +152,13 @@ namespace Wpf2chdownloader
             return s;
         }
 
-        public List<Models.File> fileList;
-        public List<Models.File> fileLIstforDownload;
+        public List<Models.threadclass.File> fileList;
+        public List<Models.threadclass.File> fileLIstforDownload;
         public Dictionary<string, int> fileTypeCount;
-        public Rootobject threadForDownload;
+        public Models.threadclass.Rootobject threadForDownload;
+        public Models.boardclass.Rootobject boardForDownload;
+
+
         public List<string> listMD5Hash;
 
         private void loadButton_Click(object sender, RoutedEventArgs e)
@@ -177,7 +195,7 @@ namespace Wpf2chdownloader
 
         private void downloadButton_Click(object sender, RoutedEventArgs e)
         {
-            fileLIstforDownload = new List<Models.File>();
+            fileLIstforDownload = new List<Models.threadclass.File>();
             int count = 0;
             downloadDir = "\\" + threadForDownload.current_thread;
             if ((string)typeFileComboBox.SelectedValue == "Все")
@@ -228,6 +246,68 @@ namespace Wpf2chdownloader
                 listMD5Hash.Add(ComputeMD5Checksum(item));
             }
             WriteMD5List();
+        }
+
+        private void openWebBrowserbutton_Click(object sender, RoutedEventArgs e)
+        {
+            WebBrowserWindow f = new WebBrowserWindow(); // создаем
+            if (inputUrlBlock.Text != null) Data.Url = inputUrlBlock.Text;
+            f.ShowDialog(); // показываем
+            
+        }
+
+        public void loadBoard(Uri url)
+        {
+            var thread = new Models.boardclass.Rootobject();
+            try
+            {
+                string s = url.AbsoluteUri;
+                var wb = new WebClient { Encoding = Encoding.UTF8 };
+                wb.Headers.Add(HttpRequestHeader.Cookie, "usercode_auth=159d87d4d034c29ecb76c5117ac86d19;");
+
+                var json = wb.DownloadString(url.AbsoluteUri.Substring(0, s.LastIndexOf(".")) + ".json");
+
+
+                thread = JsonConvert.DeserializeObject<Models.boardclass.Rootobject>(json);
+            }
+            catch
+            {
+            }
+            boardForDownload = thread;
+        }
+
+        static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            var time = origin.AddSeconds(timestamp);
+            return time.AddHours(5);
+
+        }
+
+        private void findeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Uri url;
+            var boardUrl = new List<string>(); 
+            url = new Uri("https://2ch.hk/b/catalog.json");
+            loadBoard(url);
+            string[] test = regularTextBox.Text.Split(',');
+
+            foreach (var item in boardForDownload.threads)
+            {
+                bool f = false;
+                foreach (var str in test)
+                {
+                    if (item.comment.ToLower().Contains(str)) f = true;
+                }
+                if (f) boardUrl.Add("https://2ch.hk/b/res/"+ item.num + ".html  | create - " + ConvertFromUnixTimestamp (item.timestamp)  + "  |  lasthit - " + ConvertFromUnixTimestamp(item.lasthit) +
+                   "\n" + item.comment );  
+            }
+            findeTextBox.Text = "";
+            foreach (var item in boardUrl)
+            {
+                findeTextBox.Text += item + "\n";
+            }
+
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿
 
-namespace Wpf2chdownloader.Models.threadclass
+
+namespace Wpf2chdownloader.Models.boardclass
 {
-
     public class Rootobject
     {
         public string Board { get; set; }
@@ -12,7 +12,6 @@ namespace Wpf2chdownloader.Models.threadclass
         public string board_banner_image { get; set; }
         public string board_banner_link { get; set; }
         public int bump_limit { get; set; }
-        public string current_thread { get; set; }
         public string default_name { get; set; }
         public int enable_dices { get; set; }
         public int enable_flags { get; set; }
@@ -28,19 +27,14 @@ namespace Wpf2chdownloader.Models.threadclass
         public int enable_thread_tags { get; set; }
         public int enable_trips { get; set; }
         public int enable_video { get; set; }
-        public string file_prefix { get; set; }
-        public int files_count { get; set; }
-        public int is_board { get; set; }
-        public int is_closed { get; set; }
-        public int is_index { get; set; }
+        public string filter { get; set; }
         public int max_comment { get; set; }
-        public int max_num { get; set; }
+        public int max_files_size { get; set; }
+        public int max_vip_files { get; set; }
+        public int max_vip_files_size { get; set; }
         public News[] news { get; set; }
-        public int posts_count { get; set; }
         public Thread[] threads { get; set; }
-        public string title { get; set; }
         public Top[] top { get; set; }
-        public string unique_posters { get; set; }
     }
 
     public class News
@@ -52,23 +46,19 @@ namespace Wpf2chdownloader.Models.threadclass
 
     public class Thread
     {
-        public Post[] posts { get; set; }
-    }
-
-    public class Post
-    {
         public int banned { get; set; }
         public int closed { get; set; }
         public string comment { get; set; }
         public string date { get; set; }
         public string email { get; set; }
         public File[] files { get; set; }
+        public int files_count { get; set; }
         public double lasthit { get; set; }
         public string name { get; set; }
-        public int num { get; set; }
-        public int number { get; set; }
+        public string num { get; set; }
         public int op { get; set; }
         public string parent { get; set; }
+        public int posts_count { get; set; }
         public int sticky { get; set; }
         public string subject { get; set; }
         public string tags { get; set; }
@@ -90,6 +80,7 @@ namespace Wpf2chdownloader.Models.threadclass
         public int tn_width { get; set; }
         public int type { get; set; }
         public int width { get; set; }
+        public string duration { get; set; }
     }
 
     public class Top
@@ -100,29 +91,5 @@ namespace Wpf2chdownloader.Models.threadclass
         public int speed { get; set; }
     }
 
-    public class FileTypeCount
-    {
-        public string type { get; set; }
-        public int count { get; set; }
-    }
 
-    public class FileForDownload
-    {
-        public string md5 { get; set; }
-        public string name { get; set; }
-        public string path { get; set; }
-        public int size { get; set; }
-        public int type { get; set; }
-    }
-
-    public class FileList
-    {
-        public List<FileTypeCount> listFileTypeCount { get; set; }
-        public List<FileForDownload> listFileForDownload { get; set; }
-        public FileList()
-        {
-            listFileTypeCount = new List<FileTypeCount>();
-            listFileForDownload = new List<FileForDownload>();
-        }
-    }
 }
