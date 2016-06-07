@@ -71,9 +71,6 @@ namespace Wpf2chdownloader
         {
             string link = item.path;
             WebClient webClient = new WebClient();
-            webClient.Headers.Add(HttpRequestHeader.Cookie,
-              "usercode_auth=159d87d4d034c29ecb76c5117ac86d19;");
-            webClient.Headers[HttpRequestHeader.CacheControl] = "no-cache";
             string localPath = Directory.GetCurrentDirectory();
             localPath = localPath + "\\DownloadDir" + downloadDir;
             Directory.CreateDirectory(localPath);
@@ -109,11 +106,7 @@ namespace Wpf2chdownloader
             {
                 string s = url.AbsoluteUri;
                 var wb = new WebClient { Encoding = Encoding.UTF8 };
-                wb.Headers.Add(HttpRequestHeader.Cookie,"usercode_auth=159d87d4d034c29ecb76c5117ac86d19;");
-
                 var json = wb.DownloadString(url.AbsoluteUri.Substring(0, s.LastIndexOf(".")) + ".json");
-
-    
                 thread = JsonConvert.DeserializeObject<Models.threadclass.Rootobject>(json);
             }
             catch
@@ -263,11 +256,7 @@ namespace Wpf2chdownloader
             {
                 string s = url.AbsoluteUri;
                 var wb = new WebClient { Encoding = Encoding.UTF8 };
-                wb.Headers.Add(HttpRequestHeader.Cookie, "usercode_auth=159d87d4d034c29ecb76c5117ac86d19;");
-
                 var json = wb.DownloadString(url.AbsoluteUri.Substring(0, s.LastIndexOf(".")) + ".json");
-
-
                 thread = JsonConvert.DeserializeObject<Models.boardclass.Rootobject>(json);
             }
             catch
