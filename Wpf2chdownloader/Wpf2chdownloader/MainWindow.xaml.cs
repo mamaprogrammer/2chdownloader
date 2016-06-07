@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using Wpf2chdownloader.Models;
 
@@ -96,6 +97,8 @@ namespace Wpf2chdownloader
             }
             WriteMD5List();
             value = 0;
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.downloadButton.IsEnabled = true));
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.typeFileComboBox.IsEnabled = true));
             Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, value });
         }
 
