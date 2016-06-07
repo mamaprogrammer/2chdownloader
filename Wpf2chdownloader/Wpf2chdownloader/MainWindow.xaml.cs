@@ -180,6 +180,7 @@ namespace Wpf2chdownloader
                 }
                 infoBlock.Text = getCountType(fileTypeCount);
                 downloadButton.IsEnabled = true;
+                typeFileComboBox.IsEnabled = true;
             }
             catch
             {
@@ -190,6 +191,8 @@ namespace Wpf2chdownloader
         {
             fileLIstforDownload = new List<Models.threadclass.File>();
             int count = 0;
+            downloadButton.IsEnabled = false;
+            typeFileComboBox.IsEnabled = false;
             downloadDir = "\\" + threadForDownload.current_thread;
             if ((string)typeFileComboBox.SelectedValue == "Все")
             {
@@ -270,7 +273,6 @@ namespace Wpf2chdownloader
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             var time = origin.AddSeconds(timestamp);
             return time.AddHours(5);
-
         }
 
         private void findeButton_Click(object sender, RoutedEventArgs e)
@@ -289,7 +291,7 @@ namespace Wpf2chdownloader
                     if (item.comment.ToLower().Contains(str)) f = true;
                 }
                 if (f) boardUrl.Add("https://2ch.hk/b/res/"+ item.num + ".html  | create - " + ConvertFromUnixTimestamp (item.timestamp)  + "  |  lasthit - " + ConvertFromUnixTimestamp(item.lasthit) +
-                   "\n" + item.comment );  
+                   "\n" + item.comment  + "\n ------------------------------------------------------ \n");  
             }
             findeTextBox.Text = "";
             foreach (var item in boardUrl)
