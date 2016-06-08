@@ -290,17 +290,19 @@ namespace Wpf2chdownloader
             var boardLetter = boardTextBox.Text; 
             url = new Uri("https://2ch.hk/"+ boardLetter + "/catalog.json");
             loadBoard(url);
-            string[] test = regularTextBox.Text.Split(',');
-
+            string[] regularString = regularTextBox.Text.Split(',');
+            string comment;
             foreach (var item in boardForDownload.threads)
             {
                 bool f = false;
-                foreach (var str in test)
+                foreach (var str in regularString)
                 {
                     if (item.comment.ToLower().Contains(str)) f = true;
                 }
+                if (item.comment.Length > 130) comment = item.comment.Substring(0, 130) + "...";
+                else comment = item.comment;
                 if (f) boardUrl.Add("https://2ch.hk/b/res/"+ item.num + ".html  | create - " + ConvertFromUnixTimestamp (item.timestamp)  + "  |  lasthit - " + ConvertFromUnixTimestamp(item.lasthit) +
-                   "\n" + item.comment  + "\n ------------------------------------------------------ \n");  
+                   "\n" + comment  + "\n ------------------------------------------------------ \n");  
             }
             findeTextBox.Text = "";
             foreach (var item in boardUrl)
