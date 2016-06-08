@@ -99,6 +99,8 @@ namespace Wpf2chdownloader
             value = 0;
             Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.downloadButton.IsEnabled = true));
             Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.typeFileComboBox.IsEnabled = true));
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.md5Button.IsEnabled = true));
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.loadButton.IsEnabled = true));
             Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, value });
         }
 
@@ -184,6 +186,8 @@ namespace Wpf2chdownloader
                 infoBlock.Text = getCountType(fileTypeCount);
                 downloadButton.IsEnabled = true;
                 typeFileComboBox.IsEnabled = true;
+                loadButton.IsEnabled = true;
+                md5Button.IsEnabled = true;
             }
             catch
             {
@@ -258,6 +262,7 @@ namespace Wpf2chdownloader
         public void loadBoard(Uri url)
         {
             var thread = new Models.boardclass.Rootobject();
+
             try
             {
                 string s = url.AbsoluteUri;
