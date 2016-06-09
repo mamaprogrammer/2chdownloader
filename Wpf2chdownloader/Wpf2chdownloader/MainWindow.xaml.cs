@@ -280,7 +280,7 @@ namespace Wpf2chdownloader
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             var time = origin.AddSeconds(timestamp);
-            return time.AddHours(5);
+            return time.AddHours(TimeZoneInfo.Local.BaseUtcOffset.Hours);
         }
 
         private void findeButton_Click(object sender, RoutedEventArgs e)
