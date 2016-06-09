@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Awesomium.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,14 +24,19 @@ namespace Wpf2chdownloader
         public WebBrowserWindow()
         {
             InitializeComponent();
-            (wfhSample.Child as System.Windows.Forms.WebBrowser).ScriptErrorsSuppressed = true;
-            (wfhSample.Child as System.Windows.Forms.WebBrowser).Navigate("https://2ch.hk/b/");
+            webControl.Source = "http://2ch.hk/b".ToUri();
         }
 
         private void GetCoociesButton_Click(object sender, RoutedEventArgs e)
         {
-            var test = (wfhSample.Child as System.Windows.Forms.WebBrowser).Document.Cookie;
-            Data.CoocieValue = (wfhSample.Child as System.Windows.Forms.WebBrowser).Document.Cookie;
+            //webControl.Source = "http://2ch.hk/b".ToUri();
+            string cookies = webControl.ExecuteJavascriptWithResult("document.headers;");
+            Data.CoocieValue = cookies;
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

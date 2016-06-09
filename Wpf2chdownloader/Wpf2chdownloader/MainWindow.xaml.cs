@@ -45,6 +45,7 @@ namespace Wpf2chdownloader
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             listMD5Hash = new List<string>();
             ReadMD5List();
+            ReadCookies();
             InitializeComponent();
         }
 
@@ -72,6 +73,7 @@ namespace Wpf2chdownloader
         {
             string link = item.path;
             WebClient webClient = new WebClient();
+            webClient.Headers.Add(HttpRequestHeader.Cookie, Data.CoocieValue);
             string localPath = Directory.GetCurrentDirectory();
             localPath = localPath + "\\DownloadDir" + downloadDir;
             Directory.CreateDirectory(localPath);
@@ -110,6 +112,7 @@ namespace Wpf2chdownloader
             {
                 string s = url.AbsoluteUri;
                 var wb = new WebClient { Encoding = Encoding.UTF8 };
+                wb.Headers.Add(HttpRequestHeader.Cookie,Data.CoocieValue);
                 var json = wb.DownloadString(url.AbsoluteUri.Substring(0, s.LastIndexOf(".")) + ".json");
                 thread = JsonConvert.DeserializeObject<Models.threadclass.Rootobject>(json);
             }
@@ -154,7 +157,7 @@ namespace Wpf2chdownloader
         public Dictionary<string, int> fileTypeCount;
         public Models.threadclass.Rootobject threadForDownload;
         public Models.boardclass.Rootobject boardForDownload;
-
+        public string Cookies;
 
         public List<string> listMD5Hash;
 
@@ -165,6 +168,7 @@ namespace Wpf2chdownloader
             {
                 url = new Uri(inputUrlBox.Text);
                 loadThread(url);
+                WriteCookies();
                 fileList  = parseThread(threadForDownload);
                 typeFileComboBox.Items.Clear();
                 typeFileComboBox.Items.Add("Все");
@@ -221,6 +225,24 @@ namespace Wpf2chdownloader
             worker.RunWorkerAsync();
         }
 
+        public void ReadCookies()
+        {
+            string path = "cookies.xml";
+            XmlSerializer serializer = new XmlSerializer(typeof(string));
+            StreamReader reader = new StreamReader(path);
+            Data.CoocieValue = (string)serializer.Deserialize(reader);
+            reader.Close();
+        }
+
+        public void WriteCookies()
+        {
+            string path = "cookies.xml";
+            var writer = new XmlSerializer(typeof(string));
+            var wfile = new StreamWriter(path);
+            writer.Serialize(wfile, Data.CoocieValue);
+            wfile.Close();
+        }
+
         public void ReadMD5List()
         {
             listMD5Hash = new List<string>();
@@ -267,6 +289,7 @@ namespace Wpf2chdownloader
             {
                 string s = url.AbsoluteUri;
                 var wb = new WebClient { Encoding = Encoding.UTF8 };
+                wb.Headers.Add(HttpRequestHeader.Cookie, Data.CoocieValue);
                 var json = wb.DownloadString(url.AbsoluteUri.Substring(0, s.LastIndexOf(".")) + ".json");
                 thread = JsonConvert.DeserializeObject<Models.boardclass.Rootobject>(json);
             }
