@@ -12,7 +12,7 @@
         <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" Margin="487,10,0,0" VerticalAlignment="Top" Width="90" Height="23" Click="loadButton_Click"/>
         <ComboBox x:Name="typeFileComboBox" HorizontalAlignment="Left" Margin="362,38,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
         <Button x:Name="downloadButton" Content="Download" HorizontalAlignment="Left" Margin="487,38,0,0" VerticalAlignment="Top" Width="90" Height="22" Click="downloadButton_Click" IsEnabled="False"/>
-        <TextBlock x:Name="infoBlock" HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="347"/>
+        <TextBlock x:Name="infoBlock" HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="49" Width="347"/>
         <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="22" Margin="362,65,0,0" VerticalAlignment="Top" Width="215"/>
         <Button x:Name="md5Button" Content="CreateMD5Table" HorizontalAlignment="Left" Margin="487,107,0,0" VerticalAlignment="Top" Width="90" Height="22" FontSize="10" Click="md5Button_Click"/>
         <Button x:Name="openWebBrowserbutton" Content="Button" HorizontalAlignment="Left" Margin="487,134,0,0" VerticalAlignment="Top" Width="90" Height="22" Click="openWebBrowserbutton_Click"/>

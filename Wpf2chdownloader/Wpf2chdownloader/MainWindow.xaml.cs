@@ -142,12 +142,17 @@ namespace Wpf2chdownloader
             return path.Substring(path.IndexOf("."));
         }
 
-        public string getCountType (Dictionary<string, int> dict)
+        public string getCountType ()
         {
-            string s = "Найдено : ";
-            foreach (var item in dict)
+            string s = "Найдено всего : ";
+            foreach (var item in allfileTypeCount)
             {
                 s += item.ToString(); 
+            }
+            s += "\nНайдено нового : ";
+            foreach (var item in fileTypeCount)
+            {
+                s += item.ToString();
             }
             return s;
         }
@@ -156,25 +161,36 @@ namespace Wpf2chdownloader
         public List<Models.threadclass.File> allfileList;
         public List<Models.threadclass.File> fileLIstforDownload;
         public Dictionary<string, int> fileTypeCount;
+        public Dictionary<string, int> allfileTypeCount;
         public Models.threadclass.Rootobject threadForDownload;
         public Models.boardclass.Rootobject boardForDownload;
         public string Cookies;
 
         public List<string> listMD5Hash;
 
-        public void filltypeFileComboBox ()
+        public void filldict(ref Dictionary<string, int> dict, List<Models.threadclass.File> list)
         {
-            fileTypeCount = new Dictionary<string, int>();
+            dict = new Dictionary<string, int>();
+            foreach (var item in list)
+            {
+                if (!dict.ContainsKey(getFileType(item.name)))
+                {
+                    dict.Add(getFileType(item.name), 1);
+                }
+                else
+                {
+                    dict[getFileType(item.name)] += 1;
+                }
+            }
+        }
+
+        public void filltypeFileComboBox ( )
+        {
             foreach (var item in fileList)
             {
                 if (!typeFileComboBox.Items.Contains(getFileType(item.name)))
                 {
-                    fileTypeCount.Add(getFileType(item.name), 1);
                     typeFileComboBox.Items.Add(getFileType(item.name));
-                }
-                else
-                {
-                    fileTypeCount[getFileType(item.name)] += 1;
                 }
             }
         }
@@ -199,8 +215,10 @@ namespace Wpf2chdownloader
                 typeFileComboBox.Items.Clear();
                 typeFileComboBox.Items.Add("Все");
                 typeFileComboBox.SelectedItem = "Все";
+                filldict(ref fileTypeCount, fileList);
+                filldict(ref allfileTypeCount, allfileList);
                 filltypeFileComboBox();
-                infoBlock.Text = getCountType(fileTypeCount);
+                infoBlock.Text = getCountType();
                 downloadButton.IsEnabled = true;
                 typeFileComboBox.IsEnabled = true;
                 md5Button.IsEnabled = false;
