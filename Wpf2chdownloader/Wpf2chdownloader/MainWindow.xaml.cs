@@ -153,6 +153,7 @@ namespace Wpf2chdownloader
         }
 
         public List<Models.threadclass.File> fileList;
+        public List<Models.threadclass.File> allfileList;
         public List<Models.threadclass.File> fileLIstforDownload;
         public Dictionary<string, int> fileTypeCount;
         public Models.threadclass.Rootobject threadForDownload;
@@ -160,6 +161,23 @@ namespace Wpf2chdownloader
         public string Cookies;
 
         public List<string> listMD5Hash;
+
+        public void filltypeFileComboBox ()
+        {
+            fileTypeCount = new Dictionary<string, int>();
+            foreach (var item in fileList)
+            {
+                if (!typeFileComboBox.Items.Contains(getFileType(item.name)))
+                {
+                    fileTypeCount.Add(getFileType(item.name), 1);
+                    typeFileComboBox.Items.Add(getFileType(item.name));
+                }
+                else
+                {
+                    fileTypeCount[getFileType(item.name)] += 1;
+                }
+            }
+        }
 
         private void loadButton_Click(object sender, RoutedEventArgs e)
         {
@@ -169,23 +187,19 @@ namespace Wpf2chdownloader
                 url = new Uri(inputUrlBox.Text);
                 loadThread(url);
                 WriteCookies();
-                fileList  = parseThread(threadForDownload);
+                allfileList = parseThread(threadForDownload);
+                fileList = new List<Models.threadclass.File>();
+                foreach (var item in allfileList)
+                {
+                    if (!listMD5Hash.Contains(item.md5))
+                    {
+                        fileList.Add(item);
+                    }
+                }
                 typeFileComboBox.Items.Clear();
                 typeFileComboBox.Items.Add("Все");
                 typeFileComboBox.SelectedItem = "Все";
-                fileTypeCount = new Dictionary<string, int>();
-                foreach (var item in fileList)
-                {
-                    if (!typeFileComboBox.Items.Contains(getFileType(item.name)))
-                    {
-                        fileTypeCount.Add( getFileType(item.name), 1 ); 
-                        typeFileComboBox.Items.Add(getFileType(item.name));
-                    } else
-                    {
-                        fileTypeCount[getFileType(item.name)] += 1;
-                    }
-                      
-                }
+                filltypeFileComboBox();
                 infoBlock.Text = getCountType(fileTypeCount);
                 downloadButton.IsEnabled = true;
                 typeFileComboBox.IsEnabled = true;
