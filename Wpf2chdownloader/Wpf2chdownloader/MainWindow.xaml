@@ -16,7 +16,7 @@
         <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="22" Margin="362,65,0,0" VerticalAlignment="Top" Width="215"/>
         <Button x:Name="md5Button" Content="CreateMD5Table" HorizontalAlignment="Left" Margin="487,107,0,0" VerticalAlignment="Top" Width="90" Height="22" FontSize="10" Click="md5Button_Click"/>
         <Button x:Name="openWebBrowserbutton" Content="Button" HorizontalAlignment="Left" Margin="487,134,0,0" VerticalAlignment="Top" Width="90" Height="22" Click="openWebBrowserbutton_Click"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="362,92,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="215" Height="10" FontSize="8"/>
+        <TextBlock x:Name="timeBlock" HorizontalAlignment="Left" Margin="362,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215" Height="10" FontSize="8"/>
         <TextBox x:Name="findeTextBox" HorizontalAlignment="Left" Height="121" Margin="10,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="567"/>
         <Button x:Name="findeButton" Content="Finde" HorizontalAlignment="Left" Margin="487,161,0,0" VerticalAlignment="Top" Width="90" Height="22" Click="findeButton_Click"/>
         <TextBox x:Name="regularTextBox" HorizontalAlignment="Left" Height="22" Margin="362,161,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>

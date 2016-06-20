@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -87,15 +88,24 @@ namespace Wpf2chdownloader
         {
             UpdateProgressBarDelegate updProgress = new UpdateProgressBarDelegate(progressBar.SetValue);
             double value = 0;
+            var sw = new Stopwatch();
+            int downloadsize = 0;
             foreach (var item in fileLIstforDownload)
             {
                 if (!listMD5Hash.Contains(item.md5))
                 {
+                    sw.Start();
                     DownloadFile(item);
+                    TimeSpan ts = sw.Elapsed;
                     listMD5Hash.Add(item.md5);
+                    downloadsize += item.size;
+                    var newTime = new TimeSpan(0, 0, (int)((ts.TotalSeconds * size / downloadsize) - ts.TotalSeconds));
+                    string elapsedTime = String.Format("Прошло - {0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+                    elapsedTime += String.Format("; Осталось примерно - {0:00}:{1:00}:{2:00}", newTime.Hours, newTime.Minutes, newTime.Seconds);
+                    value += item.size;
+                    Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => this.timeBlock.Text = elapsedTime));
+                    Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, value });
                 }
-                   
-                Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, ++value });
             }
             WriteMD5List();
             value = 0;
@@ -103,6 +113,7 @@ namespace Wpf2chdownloader
             Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.typeFileComboBox.IsEnabled = true));
             Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => this.loadButton.IsEnabled = true));
             Dispatcher.Invoke(updProgress, new object[] { ProgressBar.ValueProperty, value });
+            Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => this.timeBlock.Text = ""));
         }
 
         public void loadThread(Uri url)
@@ -165,6 +176,7 @@ namespace Wpf2chdownloader
         public Models.threadclass.Rootobject threadForDownload;
         public Models.boardclass.Rootobject boardForDownload;
         public string Cookies;
+        public int size;
 
         public List<string> listMD5Hash;
 
@@ -239,21 +251,25 @@ namespace Wpf2chdownloader
             downloadDir = "\\" + threadForDownload.current_thread;
             if ((string)typeFileComboBox.SelectedValue == "Все")
             {
-                foreach (var item in fileTypeCount)
+                foreach (var item in fileList)
                 {
-                    count += item.Value;
+                    count += item.size;
                 }
                 fileLIstforDownload = fileList;
             }
             else
             {
-                count = fileTypeCount[(string)typeFileComboBox.SelectedValue];
                 foreach (var item in fileList)
                 {
-                    if (getFileType(item.name) == (string)typeFileComboBox.SelectedValue) fileLIstforDownload.Add(item);
+                    if (getFileType(item.name) == (string)typeFileComboBox.SelectedValue)
+                    {
+                        fileLIstforDownload.Add(item);
+                        count += item.size;
+                    }
                 }
             }
             progressBar.Maximum = count;
+            size = count;
             worker.RunWorkerAsync();
         }
 
