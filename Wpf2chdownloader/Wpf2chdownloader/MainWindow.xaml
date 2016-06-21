@@ -23,6 +23,7 @@
         <TextBox x:Name="boardTextBox" HorizontalAlignment="Left" Height="22" Margin="326,161,0,0" TextWrapping="Wrap" Text="b" VerticalAlignment="Top" Width="31"/>
         <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="326,143,0,0" TextWrapping="Wrap" Text="board" VerticalAlignment="Top" Height="13" Width="31" FontSize="10"/>
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="362,143,0,0" TextWrapping="Wrap" Text="Seach" VerticalAlignment="Top" Height="13" Width="120" FontSize="10"/>
+        <Button x:Name="finde_copy" Content="Finde copy" HorizontalAlignment="Left" Margin="417,107,0,0" VerticalAlignment="Top" Width="65" Height="22" Click="finde_copy_Click"/>
 
     </Grid>
 </Window>

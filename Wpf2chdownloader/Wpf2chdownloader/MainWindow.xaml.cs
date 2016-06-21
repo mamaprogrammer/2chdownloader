@@ -310,10 +310,21 @@ namespace Wpf2chdownloader
             wfile.Close();
         }
 
+        private void finde_copy_Click(object sender, RoutedEventArgs e)
+        {
+            var allFiles = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\DownloadDir", "*.*", SearchOption.AllDirectories);
+            var list = new List<string>();
+            foreach (var item in allFiles)
+            {
+                if (!list.Contains(ComputeMD5Checksum(item))) list.Add(ComputeMD5Checksum(item));
+                else findeTextBox.Text += item + "\n";
+            }
+            findeTextBox.Text += "Job done";
+        }
 
         private void md5Button_Click(object sender, RoutedEventArgs e)
         {
-            var allFiles = Directory.GetFiles(Directory.GetCurrentDirectory()+ "\\DownloadDir", "*.*", SearchOption.AllDirectories);
+            var allFiles = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\DownloadDir", "*.*", SearchOption.AllDirectories);
             foreach (var item in allFiles)
             {
                 listMD5Hash.Add(ComputeMD5Checksum(item));
@@ -382,5 +393,7 @@ namespace Wpf2chdownloader
             }
 
         }
+
+
     }
 }
